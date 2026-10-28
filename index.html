@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Parking Management</title><link rel="stylesheet" th:href="@{/style.css}"></head>
+<body>
+<header class="topbar"><div class="brand-mark">P</div><div><p class="eyebrow">SMART PARKING SYSTEM</p><h1>Parking dashboard</h1></div><a class="log-link" th:href="@{/logs}">Activity log ↗</a></header>
+<main class="container">
+<section class="intro"><div><p class="eyebrow">LIVE OVERVIEW</p><h2>Find your parking space.</h2><p class="muted">Manage vehicle bookings and monitor parking slots in one place.</p></div><div class="intro-icon">⌖</div></section>
+<div th:if="${message}" class="notice success" th:text="${message}"></div><div th:if="${error}" class="notice error" th:text="${error}"></div>
+<section class="stats">
+<article class="stat-card"><span class="stat-icon">▦</span><p>Total slots</p><strong th:text="${slots.size()}">10</strong></article>
+<article class="stat-card"><span class="stat-icon green">✓</span><p>Available</p><strong th:text="${available}">10</strong></article>
+<article class="stat-card"><span class="stat-icon red">●</span><p>Occupied</p><strong th:text="${occupied}">0</strong></article>
+</section>
+<section class="panel"><div class="panel-heading"><div><p class="eyebrow">PARKING INVENTORY</p><h2>All parking slots</h2></div><span class="pill" th:text="${available} + ' spaces available'">10 spaces available</span></div>
+<div class="table-wrap"><table><thead><tr><th>Slot</th><th>Location</th><th>Type</th><th>Status</th><th>Vehicle number</th><th>Booked at</th><th>Action</th></tr></thead><tbody>
+<tr th:each="slot : ${slots}"><td class="slot-number" th:text="'P-' + ${slot.slot_id}">P-1</td><td th:text="${slot.location}">Zone 1</td>
+<td><span class="type-pill" th:text="${slot.slot_type}">CAR</span></td>
+<td><span class="status" th:classappend="${slot.status == 'AVAILABLE'} ? ' available' : ' occupied'" th:text="${slot.status}">AVAILABLE</span></td>
+<td th:text="${slot.vehicle_no != null ? slot.vehicle_no : '—'}">—</td><td th:text="${slot.booked_at != null ? slot.booked_at : '—'}">—</td>
+<td><form th:if="${slot.status == 'OCCUPIED'}" th:action="@{/release/{id}(id=${slot.slot_id})}" method="post"><button class="small-button secondary" type="submit">Release</button></form><span th:if="${slot.status == 'AVAILABLE'}" class="muted small">Ready to book</span></td></tr>
+</tbody></table></div></section>
+<section class="panel booking-panel"><div><p class="eyebrow">NEW RESERVATION</p><h2>Book a parking slot</h2><p class="muted">Enter a vehicle number and choose an available slot.</p></div>
+<form class="booking-form" th:action="@{/book}" method="post"><label>Vehicle number<input name="vehicleNo" placeholder="e.g. TN01AB1234" maxlength="40" required></label>
+<label>Available slot<select name="slotId" required><option th:each="slot : ${slots}" th:if="${slot.status == 'AVAILABLE'}" th:value="${slot.slot_id}" th:text="'P-' + ${slot.slot_id} + ' · ' + ${slot.slot_type} + ' · ' + ${slot.location}"></option></select></label>
+<button type="submit" class="primary-button" th:disabled="${available == 0}">Confirm booking →</button></form></section>
+<footer>Smart Parking Management System <span>Java · Spring Boot · PostgreSQL</span></footer>
+</main></body></html>

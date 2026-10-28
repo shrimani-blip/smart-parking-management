@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parking Activity Log</title><link rel="stylesheet" th:href="@{/style.css}"></head><body>
+<header class="topbar"><div class="brand-mark">P</div><div><p class="eyebrow">SMART PARKING SYSTEM</p><h1>Activity log</h1></div><a class="log-link" th:href="@{/}">← Dashboard</a></header>
+<main class="container"><section class="panel"><div class="panel-heading"><div><p class="eyebrow">RECENT EVENTS</p><h2>Latest parking activity</h2></div><span class="pill">Last 100 events</span></div>
+<div class="table-wrap"><table><thead><tr><th>Log ID</th><th>Slot</th><th>Vehicle</th><th>Action</th><th>Date &amp; time</th></tr></thead><tbody>
+<tr th:each="log : ${logs}"><td th:text="${log.log_id}">1</td><td class="slot-number" th:text="'P-' + ${log.slot_id}">P-1</td><td th:text="${log.vehicle_no}">TN01AB1234</td>
+<td><span class="status" th:classappend="${log.action == 'BOOKED'} ? ' occupied' : ' available'" th:text="${log.action}">BOOKED</span></td><td th:text="${log.event_time}">2026-01-01 10:00:00</td></tr>
+<tr th:if="${#lists.isEmpty(logs)}"><td colspan="5" class="empty">No activity recorded yet. Book a slot to create the first event.</td></tr>
+</tbody></table></div></section></main></body></html>
