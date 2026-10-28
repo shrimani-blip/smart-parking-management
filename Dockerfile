@@ -4,10 +4,13 @@ WORKDIR /app
 COPY pom.xml .
 
 RUN mkdir -p src/main/java/com/college/smartparking
-RUN mkdir -p src/main/resources
+RUN mkdir -p src/main/resources/templates
+RUN mkdir -p src/main/resources/static
 
 COPY *.java src/main/java/com/college/smartparking/
 COPY application.properties src/main/resources/
+COPY *.html src/main/resources/templates/
+COPY *.css src/main/resources/static/
 
 RUN mvn -B -DskipTests package
 
